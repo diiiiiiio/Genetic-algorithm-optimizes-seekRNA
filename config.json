@@ -1,0 +1,29 @@
+{
+    "sequences": {
+        "A": "ACAGGUAAGACCGUGACUCACUAAACCUGAACAGUAUUUUGGGCUUGAAGUCCGCCGUGAAAAUAAGGGGUGAGUCGGCGAA",
+        "B": "AACCUGGUUUAUACGUGGGCUCCCUGCUGCAGUGAAGCAAAGCCGUUAGGGCGAUCAGGU"
+    },
+    "target_sites": {
+        "j1": 30, "j2": 40,
+        "J1": 56, "J2": 65,
+        "k1": 8,  "k2": 15,
+        "K1": 46, "K2": 54
+    },
+    "motif_lengths": {
+        "A_MOTIF_LEN": 6,
+        "B_MOTIF_LEN": 3
+    },
+    "ga_parameters": {
+        "n_mut_positions": 1,
+        "p_crossover": 0.2,
+        "rounds": 30,
+        "pool_size": 1000,
+        "top_percent": 0.25,
+        "elite_size": 100,
+        "target_pop_size": 200,
+        "fold_mode": "full",
+        "n_workers": 7
+    },
+    "nucleotides": ["A", "C", "G", "U"]
+}
+
