@@ -1,11 +1,70 @@
-# SeekRNA GA Project
+# SeekRNA Optimisation via Genetic Algorithm
 
-A genetic algorithm framework for optimizing RNA sequences. It evolves candidates through mutation and crossover, evaluating fitness via two-tier scoring: fast sequence filtering and comprehensive structural analysis using RNA folding tools to maximize loop accessibility and stem conservation.
+A computational framework that uses a genetic algorithm (GA) to design optimised **seekRNA** molecules — chimeric RNA sequences engineered to detect specific bacterial strains through their insertion sequence (IS) elements.
+
+---
+
+## Background
+
+### What is seekRNA?
+
+**SeekRNA** is a chimeric RNA molecule designed to detect specific bacterial strains. The concept comes from the biology of **insertion sequences (IS elements)** — small mobile DNA segments found in bacteria. Different bacterial strains carry different IS elements, making them natural molecular "barcodes" for strain identification.
+
+A seekRNA molecule is constructed by combining RNA sequences derived from two different IS elements (called **A** and **B** in this project) into a single chimeric sequence:
+
+```
+C = A[:i] + B + A[i:]
+```
+
+That is, sequence B is inserted into sequence A at position `i`. The resulting chimeric molecule C must fold into a specific secondary structure that allows it to recognise and bind its target.
+
+### Why does the structure matter?
+
+RNA molecules fold into secondary structures through base pairing (A-U and G-C pairs). The folded structure determines the molecule's function. For a seekRNA to work, it needs:
+
+1. **Accessible recognition sites (loops):** Four regions on the chimeric RNA must remain unpaired (forming loops rather than stems) so they can interact with target DNA. These are:
+   - **A top** and **A bottom**: recognition regions derived from IS element A
+   - **B top** and **B bottom**: recognition regions derived from IS element B
+
+2. **Conserved stem structures:** The base-paired regions (stems) between the recognition sites must closely match the stems in the original parent RNAs A and B. If the stems are disrupted, the molecule loses its structural integrity.
+
+3. **Reverse-complementary motifs:** Within each recognition region, there is a short motif sub-region. The top motif and bottom motif of each pair (A or B) must remain reverse-complementary to each other — this is essential for the molecule to fold correctly and form the recognition structure.
+
+### What is the optimisation problem?
+
+Naively inserting B into A usually produces a chimeric sequence that does **not** fold correctly — the insertion disrupts the secondary structure. The challenge is to find sequence modifications (mutations) to the chimeric RNA that restore or improve:
+
+- **Loop accessibility** — recognition regions should be unpaired
+- **Stem conservation** — stems should match the parent RNA structures
+- **Thermodynamic stability** — the overall fold should be energetically favourable
+- **Sequence quality** — GC content should be moderate, no long homopolymer runs
+
+This is a **multi-objective constrained optimisation problem** in a huge search space (4^n possible sequences). Exhaustive search is infeasible. This project uses a **genetic algorithm** with RNA-structure-aware operators to efficiently search for good candidates.
+
+### How does this project solve it?
+
+The pipeline has two stages:
+
+**Stage 1: Initial population generation** (`generate_initial_population.py`)
+- For each possible insertion point `i` in sequence A, construct the chimeric sequence C = A[:i] + B + A[i:]
+- Score each candidate using RNA secondary structure prediction
+- Collect all viable candidates into a CSV file
+
+**Stage 2: Genetic algorithm optimisation** (`main.py`)
+- Load the initial candidates
+- Evolve them over multiple generations through:
+  - **Structure-aware mutation** — edits confined to recognition regions, with paired complementary mutations in motifs
+  - **Conservative crossover** — only between parents with identical structural coordinates
+  - **Two-tier fitness evaluation:**
+    - *Tier 1 (cheap):* fast sequence-level filtering (GC content, homopolymer checks)
+    - *Tier 2 (expensive):* full structural scoring using an ensemble of three RNA folding tools (RNAfold, mxfold2, centroid_fold), evaluating loop accessibility, stem conservation, and thermodynamic stability
+- Output the top-ranked optimised seekRNA candidates
 
 ---
 
 ## Table of Contents
 
+- [Background](#background)
 - [Project Structure](#project-structure)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
@@ -181,7 +240,9 @@ Motif Verification for Top 5 Candidates:
 
 ## Algorithm Details
 
-This section provides a detailed explanation of the **mutation**, **crossover**, **coordinate updates**, and **scoring** logic.
+This section explains the technical details of each algorithm component. For biological context on why these operations are designed this way, see [Background](#background).
+
+The key insight behind the algorithm design is that seekRNA mutations cannot be random across the whole sequence — they must be **confined to the four recognition regions** and must **respect the structural constraints** (motif complementarity, stem conservation). The GA operators below are all built around this principle.
 
 ---
 
