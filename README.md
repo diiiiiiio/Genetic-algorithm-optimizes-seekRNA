@@ -24,10 +24,10 @@ A genetic algorithm framework for optimizing RNA sequences. It evolves candidate
 ```
 SeekRNA_GA_Project/
 ├── main.py                 # Entry point for the GA
+├── generate_initial_population.py  # Generate initial candidate population
 ├── config.json             # Configuration for sequences, target sites, and GA parameters
 ├── config_loader.py        # Utility to load configurations
 ├── requirements.txt        # Python dependencies
-├── initial_candidates_ISEc11_ISPa11.csv  # Initial population data
 ├── core/
 │   ├── ga_engine.py        # Main GA loop and parallel processing
 │   ├── operators.py        # Mutation and crossover logic
@@ -83,9 +83,10 @@ centroid_fold --help
 
 3. **Verify external tools are installed** (see [Prerequisites](#prerequisites))
 
-4. **Place your initial candidates CSV file** in the project root:
-   - The file should be named `initial_candidates_ISEc11_ISPa11.csv`
-   - It must contain columns: `seq`, `i`, `a1`, `a2`, `A1`, `A2`, `b1`, `b2`, `B1`, `B2`, and optionally motif coordinates
+4. **Generate the initial candidate population:**
+   ```bash
+   python generate_initial_population.py
+   ```
 
 ---
 
@@ -99,6 +100,7 @@ Edit `config.json` to customize the GA parameters:
         "A": "ACAGGUAAGACCGUGACUCACUAAACCUGAACAGUAUUUUGGGCUUGAAGUCCGCCGUGAAAAUAAGGGGUGAGUCGGCGAA",
         "B": "AACCUGGUUUAUACGUGGGCUCCCUGCUGCAGUGAAGCAAAGCCGUUAGGGCGAUCAGGU"
     },
+    "initial_population_csv": "initial_candidates.csv",
     "target_sites": {
         "j1": 30, "j2": 40,
         "J1": 56, "J2": 65,
@@ -127,6 +129,7 @@ Edit `config.json` to customize the GA parameters:
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
+| `initial_population_csv` | "initial_candidates.csv" | Path to the initial population CSV file |
 | `rounds` | 30 | Number of GA generations |
 | `pool_size` | 1000 | Candidates generated per round |
 | `top_percent` | 0.25 | Fraction evaluated with expensive scoring |
@@ -139,9 +142,15 @@ Edit `config.json` to customize the GA parameters:
 
 ## How to Run
 
-```bash
-python main.py
-```
+1. **Generate the initial population:**
+   ```bash
+   python generate_initial_population.py
+   ```
+
+2. **Run the GA:**
+   ```bash
+   python main.py
+   ```
 
 ### Output
 

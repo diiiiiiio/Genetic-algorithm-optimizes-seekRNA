@@ -3,6 +3,7 @@
         "A": "ACAGGUAAGACCGUGACUCACUAAACCUGAACAGUAUUUUGGGCUUGAAGUCCGCCGUGAAAAUAAGGGGUGAGUCGGCGAA",
         "B": "AACCUGGUUUAUACGUGGGCUCCCUGCUGCAGUGAAGCAAAGCCGUUAGGGCGAUCAGGU"
     },
+    "initial_population_csv": "initial_candidates.csv",
     "target_sites": {
         "j1": 30, "j2": 40,
         "J1": 56, "J2": 65,

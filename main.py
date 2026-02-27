@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-from config_loader import SEQUENCES, GA_PARAMS, MOTIF_LENGTHS
+from config_loader import SEQUENCES, GA_PARAMS, MOTIF_LENGTHS, CONFIG
 from utils.folding import Fold
 from core.ga_engine import GAEngine
 
@@ -28,13 +28,10 @@ def add_motif_columns_if_missing(df):
 
 def main():
     # 1) Load initial data
-    input_csv = "initial_candidates_ISEc11_ISPa11.csv"
-    if not os.path.exists(input_csv):
-        # Fallback for demonstration if file is in parent dir
-        input_csv = os.path.join("..", input_csv)
-        
+    input_csv = CONFIG.get("initial_population_csv", "initial_candidates.csv")
     if not os.path.exists(input_csv):
         print(f"Error: {input_csv} not found.")
+        print("Run 'python generate_initial_population.py' first to generate it.")
         return
 
     C1 = pd.read_csv(input_csv)
