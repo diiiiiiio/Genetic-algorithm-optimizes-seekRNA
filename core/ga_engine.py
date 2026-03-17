@@ -17,6 +17,7 @@ class GAEngine:
         self.pop_df = initial_pop_df.copy()
         self.struct_ref_A = struct_ref_A
         self.struct_ref_B = struct_ref_B
+        self.history = []
         
         # Load params
         self.rounds = GA_PARAMS["rounds"]
@@ -102,11 +103,15 @@ class GAEngine:
         
         self.pop_df = self.pop_df.drop_duplicates(subset=["seq"]).sort_values("Score", ascending=False)
         self.pop_df = self.pop_df.head(self.target_pop_size).reset_index(drop=True)
-        
-        print(f"  Population size: {len(self.pop_df)}, Best score: {self.pop_df['Score'].iloc[0]:.4f}\n")
+
+        best_score = float(self.pop_df["Score"].iloc[0])
+        avg_score = float(self.pop_df["Score"].mean())
+        self.history.append({"round": round_idx + 1, "best_score": best_score, "average_score": avg_score})
+        print(f"  Population size: {len(self.pop_df)}, Best score: {best_score:.4f}, Avg score: {avg_score:.4f}\n")
 
     def run(self):
+        self.history = []
         for r in range(self.rounds):
             self.run_round(r)
-        return self.pop_df
+        return self.pop_df, self.history
 

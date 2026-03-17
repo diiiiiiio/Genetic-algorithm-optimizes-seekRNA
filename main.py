@@ -51,7 +51,7 @@ def main():
 
     # 3) Initialize and run GA
     engine = GAEngine(C1, struct_A, struct_B)
-    final_pop = engine.run()
+    final_pop, _ = engine.run()
 
     # 4) Save results
     output_path = "ga_results.csv"
