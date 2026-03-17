@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.env
+.venv
+# Output files generated at runtime
+ga_results.csv
+rs_results.csv
+ga_history.csv
+rs_history.csv
+comparison_plot.png
