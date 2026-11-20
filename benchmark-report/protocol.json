@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "methods": [
+    "ga",
+    "crs"
+  ],
+  "seeds": [
+    10007,
+    10103,
+    10211,
+    10313,
+    10427,
+    10501,
+    10601,
+    10711,
+    10831,
+    10937,
+    11003,
+    11117,
+    11213,
+    11311,
+    11411,
+    11519,
+    11617,
+    11701,
+    11801,
+    11903
+  ],
+  "starting_candidates": 11,
+  "starting_length_nt": 142,
+  "starting_best": 3.4332528048874202,
+  "budget": 7500,
+  "budget_unit": "First scoring request for a distinct sequence within a run, including failed requests. Shared starts are scored separately.",
+  "checkpoint_every": 250,
+  "formal_primary_endpoint": "Terminal maximum minus the best shared starting score",
+  "paired_unit": "Seed",
+  "bootstrap": {
+    "resamples": 10000,
+    "seed": 20261121,
+    "interval": "95% percentile interval, resampling whole seed pairs"
+  },
+  "folding_software": "RNAfold 2.8.0",
+  "python_version": "3.10.12",
+  "comparison": "Both search methods can accumulate changes",
+  "pilot_excluded": true
+}

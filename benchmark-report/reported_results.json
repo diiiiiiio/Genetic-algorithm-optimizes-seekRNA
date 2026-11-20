@@ -1,0 +1,51 @@
+{
+  "seed_pairs": 20,
+  "requests": 300000,
+  "scored": 223499,
+  "failed": 76501,
+  "primary": {
+    "ga_mean": 0.18931232637755,
+    "crs_mean": 0.1525394154179,
+    "ga_higher": 20,
+    "mean": 0.036772910959650004,
+    "low": 0.02947682970236125,
+    "high": 0.043526211401947505
+  },
+  "coordinate_check": {
+    "ga_mean": 0.18772454612195003,
+    "crs_mean": 0.14880619266990003,
+    "ga_higher": 20,
+    "mean": 0.038918353452050004,
+    "low": 0.03254245381527251,
+    "high": 0.04425861847829125
+  },
+  "winners_passing_by_method": {
+    "ga": 10,
+    "crs": 18
+  },
+  "pairs_with_both_winners_passing": 9,
+  "length": {
+    "shared_strata": 399,
+    "unequal_counts": 398,
+    "pooled_spearman": {
+      "ga": -0.205478601338,
+      "crs": -0.18141965151
+    },
+    "max": {
+      "mean": 0.060770470529141016,
+      "low": 0.05739672994110282,
+      "high": 0.06434719103982661
+    },
+    "expected_max": {
+      "mean": 0.06622277425200769,
+      "low": 0.06277316772220332,
+      "high": 0.06992237176583335
+    }
+  },
+  "winner_weighted_score_contributions": {
+    "L": 0.0251515151515151,
+    "H": 0.0,
+    "E": 0.0116213958081657,
+    "P": 0.0
+  }
+}

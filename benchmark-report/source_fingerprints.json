@@ -1,0 +1,18 @@
+{
+  "prototype_commit": "e0dcf54d5b1611aac00ec4d78bc3ce5b3e50f855",
+  "sha256": {
+    "core/fair_search.py": "3af6b31077ee4a95191ca5cb36ec39c951526626b8a61c1fbab03865fbbc0a1d",
+    "core/operators.py": "4b0cde5b3f148e371025e33527026d4cc5c76923470c4c8733755ab874d6d678",
+    "core/scoring.py": "b7ad40fd2832e301e50bbb902c1a108a896384b83b74a878336ffb5369904001",
+    "utils/coords.py": "78adabff2e5a9b2259fa051603c4bc84721be6a3b24c3e099058f49b038fe897",
+    "utils/folding.py": "e0e41d20e2dcc6aa050c38e4e40967ced6fcc1ccbbce86c92a07239d728a414b",
+    "utils/sequence.py": "27dcb3eb72d59cbdc654fd81bccb700b0d500360ce9bc1c9de34cbe258f041cc",
+    "analysis/run_fair.py": "7983791916c785a36c5e4ebb78dd79b48282d9765bf256d36b24c703b89d9f61",
+    "analysis/summarize_fair.py": "f362b1a4003c62eabbcf7ccdc07e484fb9833c424907326f77ac17db50b25a2e",
+    "analysis/fair_protocol_lock.json": "aa8fe745d3a63f28aed481b91e633333b7cae52f42edfe7bcfc2e7a6c5b9ebfd",
+    "analysis/fair_runs/formal/manifest.json": "1f8dcc1b8c404de612113f1abd0e7ad4371df7cb35c6e32ba65d67f06879473e",
+    "config.json": "c9a5a4211479289508e9d01a2d3e77ab96bde9a4495393020a36a3d4e6efed14",
+    "config_loader.py": "01bc899bcb3d188fe79de55f421e72b85689796f6fef62c39279cce080fe350f",
+    "initial_candidates.csv": "0129c1a05aafaa22b7d4a5d30b9dea99e53442edca5719299a6666da7ebe0ac9"
+  }
+}
