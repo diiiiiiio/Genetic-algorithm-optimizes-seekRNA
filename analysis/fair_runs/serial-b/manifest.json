@@ -1,0 +1,23 @@
+{
+  "fold_mode": "cheap",
+  "reference_policy": "same mode as candidates; RNAfold structure repeated to fill three scorer slots",
+  "scoring": "Phy_mark weights unchanged",
+  "budget_unit": "first full score of a sequence, including failures",
+  "methods": [
+    "ga",
+    "crs"
+  ],
+  "seeds": [
+    7919
+  ],
+  "budget": 24,
+  "workers": 1,
+  "pool_size": 40,
+  "top_percent": 0.5,
+  "target_pop_size": 200,
+  "p_crossover": 0.2,
+  "n_mut": 1,
+  "start_best": 3.4332528048874202,
+  "start_rescore_max_abs_gap": 4.440892098500626e-16,
+  "primary_metric": "best score at budget minus shared start best"
+}

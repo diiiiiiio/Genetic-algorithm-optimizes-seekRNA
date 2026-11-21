@@ -1,0 +1,23 @@
+{
+  "locked_before_formal_run": true,
+  "pilot_seed_excluded": 7919,
+  "pilot_budget": 250,
+  "pilot_elapsed_seconds": 6.58,
+  "formal_seeds": [10007, 10103, 10211, 10313, 10427, 10501, 10601, 10711, 10831, 10937, 11003, 11117, 11213, 11311, 11411, 11519, 11617, 11701, 11801, 11903],
+  "budget": 7500,
+  "budget_unit": "first full RNAfold score of a sequence, failures included, repeats free",
+  "fold_mode": "cheap",
+  "why_this_mode": "initial_candidates.csv matches RNAfold-only scores; references and both methods use that same mode. Phy_mark weights are unchanged.",
+  "methods": ["ga", "crs"],
+  "crs": "uniform parent among all accepted candidates, same mutation operator, no crossover, edits can stack",
+  "ga": "existing selection and crossover, same mutation operator and per-round scoring quota",
+  "pool_size": 1000,
+  "top_percent": 0.25,
+  "target_pop_size": 200,
+  "p_crossover": 0.2,
+  "n_mut": 1,
+  "workers": 3,
+  "primary_metric": "best score when the budget is exhausted, minus the shared start best",
+  "inference": "paired difference of gains across the 20 formal seeds, percentile bootstrap 95 percent interval",
+  "length_check": "within each seed, compare maximum scores at lengths observed for both methods"
+}

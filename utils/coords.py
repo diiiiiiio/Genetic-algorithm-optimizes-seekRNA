@@ -14,7 +14,10 @@ def map_interval(start: int, end: int, i_insert: int, L_insert: int):
 
 
 def update_interval_after_edit(start: int, end: int, cut_start: int, cut_end: int, delta: int):
-    """Update interval coordinates after an edit (substitution, insertion, deletion)"""
+    """Update interval coordinates after an edit (substitution, insertion, deletion)."""
+    # A substitution changes a base but not the number of positions.
+    if delta == 0:
+        return start, end
     if start > cut_end:
         return start + delta, end + delta
     if end <= cut_start:

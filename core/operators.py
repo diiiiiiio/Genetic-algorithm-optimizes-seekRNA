@@ -4,32 +4,42 @@ from utils.sequence import rev_comp
 from utils.coords import update_coords_after_edit, sanity_check_coords
 from config_loader import NUCS
 
-def apply_edit(seq: str, pos: int, edit_type: str, nts: str = "", del_len: int = 1):
+def _pick_base(options, rng=None):
+    """Draw one base. A passed-in generator keeps paired edits reproducible."""
+    choice = random.choice if rng is None else rng.choice
+    return str(choice(list(options)))
+
+
+def apply_edit(seq: str, pos: int, edit_type: str, nts: str = "", del_len: int = 1, rng=None):
     """Perform one edit on seq (sub/ins/del)"""
     n = len(seq)
     pos = max(0, min(pos, n))
 
     if edit_type == "sub":
         if not nts:
-            nts = random.choice(NUCS)
+            nts = _pick_base(NUCS, rng)
+        else:
+            nts = str(nts)
         old = seq[pos]
         if nts == old:
-            nts = random.choice([b for b in NUCS if b != old])
-        new_seq = seq[:pos] + nts + seq[pos+1:]
+            nts = _pick_base([b for b in NUCS if b != old], rng)
+        new_seq = str(seq[:pos] + nts + seq[pos+1:])
         return new_seq, pos, pos+1, 0
 
     elif edit_type == "ins":
         if not nts:
-            k = random.choice([1, 2])
-            nts = "".join(random.choices(NUCS, k=k))
-        new_seq = seq[:pos] + nts + seq[pos:]
+            k = int(random.choice([1, 2]) if rng is None else rng.choice([1, 2]))
+            nts = "".join(_pick_base(NUCS, rng) for _ in range(k))
+        else:
+            nts = str(nts)
+        new_seq = str(seq[:pos] + nts + seq[pos:])
         return new_seq, pos, pos, len(nts)
 
     elif edit_type == "del":
         k = max(1, del_len)
         if pos + k > n:
             k = max(1, n - pos)
-        new_seq = seq[:pos] + seq[pos+k:]
+        new_seq = str(seq[:pos] + seq[pos+k:])
         return new_seq, pos, pos+k, -k
 
     return seq, pos, pos, 0
@@ -51,13 +61,13 @@ def mutate_single_segment(seq, coords, seg_key_pair, motif_key_pair, rng, p_sub=
     if r < p_sub / total_p:
         old_nt = seq[pos]
         nts = rng.choice([n for n in NUCS if n != old_nt])
-        new_seq, cut_s, cut_e, delta = apply_edit(seq, pos, "sub", nts=nts)
+        new_seq, cut_s, cut_e, delta = apply_edit(seq, pos, "sub", nts=nts, rng=rng)
     elif r < (p_sub + p_ins) / total_p:
         ins_len = int(rng.integers(1, 3))
         nts = "".join(rng.choice(list(NUCS), size=ins_len))
-        new_seq, cut_s, cut_e, delta = apply_edit(seq, pos, "ins", nts=nts)
+        new_seq, cut_s, cut_e, delta = apply_edit(seq, pos, "ins", nts=nts, rng=rng)
     else:
-        new_seq, cut_s, cut_e, delta = apply_edit(seq, pos, "del", del_len=1)
+        new_seq, cut_s, cut_e, delta = apply_edit(seq, pos, "del", del_len=1, rng=rng)
 
     new_coords = update_coords_after_edit(coords, cut_s, cut_e, delta, len(new_seq))
     return new_seq, new_coords
@@ -87,29 +97,29 @@ def mutate_paired_segments(seq, coords, seg_top_pair, seg_bot_pair, motif_top_pa
 
     if edit_type == "sub":
         new_nt = rng.choice([n for n in NUCS if n != seq[t_pos]])
-        new_seq, cut_s, cut_e, delta = apply_edit(seq, t_pos, "sub", nts=new_nt)
+        new_seq, cut_s, cut_e, delta = apply_edit(seq, t_pos, "sub", nts=str(new_nt), rng=rng)
         new_coords = update_coords_after_edit(coords, cut_s, cut_e, delta, len(new_seq))
         
         b_pos = new_coords[motif_bot_pair[1]] - 1 - offset
-        new_seq2, cut_s2, cut_e2, delta2 = apply_edit(new_seq, b_pos, "sub", nts=rev_comp(new_nt))
+        new_seq2, cut_s2, cut_e2, delta2 = apply_edit(new_seq, b_pos, "sub", nts=rev_comp(str(new_nt)), rng=rng)
         return new_seq2, update_coords_after_edit(new_coords, cut_s2, cut_e2, delta2, len(new_seq2))
 
     elif edit_type == "ins":
         ins_len = int(rng.integers(1, 3))
         nts = "".join(rng.choice(list(NUCS), size=ins_len))
-        new_seq, cut_s, cut_e, delta = apply_edit(seq, t_pos, "ins", nts=nts)
+        new_seq, cut_s, cut_e, delta = apply_edit(seq, t_pos, "ins", nts=str(nts), rng=rng)
         new_coords = update_coords_after_edit(coords, cut_s, cut_e, delta, len(new_seq))
         
         b_pos = new_coords[motif_bot_pair[1]] - offset
-        new_seq2, cut_s2, cut_e2, delta2 = apply_edit(new_seq, b_pos, "ins", nts=rev_comp(nts))
+        new_seq2, cut_s2, cut_e2, delta2 = apply_edit(new_seq, b_pos, "ins", nts=rev_comp(str(nts)), rng=rng)
         return new_seq2, update_coords_after_edit(new_coords, cut_s2, cut_e2, delta2, len(new_seq2))
 
     else: # del
-        new_seq, cut_s, cut_e, delta = apply_edit(seq, t_pos, "del", del_len=1)
+        new_seq, cut_s, cut_e, delta = apply_edit(seq, t_pos, "del", del_len=1, rng=rng)
         new_coords = update_coords_after_edit(coords, cut_s, cut_e, delta, len(new_seq))
         
         b_pos = new_coords[motif_bot_pair[1]] - 1 - offset
-        new_seq2, cut_s2, cut_e2, delta2 = apply_edit(new_seq, b_pos, "del", del_len=1)
+        new_seq2, cut_s2, cut_e2, delta2 = apply_edit(new_seq, b_pos, "del", del_len=1, rng=rng)
         return new_seq2, update_coords_after_edit(new_coords, cut_s2, cut_e2, delta2, len(new_seq2))
 
 
@@ -141,8 +151,8 @@ def mutate_in_targets(seq, coords, n_events=1, rng=None, p_pair=0.7, single_prob
     return seq_cur, coords_cur
 
 
-def crossover(p1, p2):
-    """One-point crossover, only if parents have identical coordinates"""
+def crossover(p1, p2, rng=None):
+    """One-point crossover, only if parents have identical coordinates."""
     s1, s2 = p1["seq"], p2["seq"]
     if len(s1) != len(s2) or p1["i"] != p2["i"]: return None
 
@@ -151,7 +161,8 @@ def crossover(p1, p2):
 
     n = len(s1)
     if n <= 1: return None
-    cut = random.randint(1, n - 1)
+    draw = random.randint if rng is None else rng.randint
+    cut = draw(1, n - 1)
     child_seq = s1[:cut] + s2[cut:]
     return child_seq, {k: int(p1[k]) for k in keys}, int(p1["i"])
 
